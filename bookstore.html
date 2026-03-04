@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Folio — Book Store</title>
+
+  <!-- Google tag (gtag.js) — Replace G-XXXXXXXXXX with your GA4 Measurement ID -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #faf7f2;
+      --ink: #1a1208;
+      --warm: #c8873a;
+      --warm-lt: #f0dfc4;
+      --muted: #7a6a55;
+      --card: #fff;
+      --border: #e8ddd0;
+    }
+
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
+
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.2rem 5%; border-bottom: 1px solid var(--border);
+      background: var(--bg); position: sticky; top: 0; z-index: 100;
+    }
+    .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; }
+    .logo span { color: var(--warm); font-style: italic; }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a {
+      text-decoration: none; color: var(--muted); font-size: 0.88rem;
+      font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--warm); }
+    .cart-btn {
+      background: var(--ink); color: #fff; border: none; padding: 0.55rem 1.2rem;
+      border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .cart-btn:hover { background: var(--warm); }
+
+    .hero {
+      padding: 5rem 5% 4rem; display: grid; grid-template-columns: 1fr 1fr;
+      gap: 3rem; align-items: center; max-width: 1200px; margin: 0 auto;
+    }
+    .hero-text h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1.12; margin-bottom: 1.2rem; }
+    .hero-text h1 em { color: var(--warm); font-style: italic; }
+    .hero-text p { color: var(--muted); line-height: 1.7; max-width: 420px; margin-bottom: 2rem; }
+    .hero-cta {
+      display: inline-block; background: var(--warm); color: #fff; border: none;
+      padding: 0.85rem 2rem; border-radius: 50px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: background 0.2s, transform 0.15s;
+    }
+    .hero-cta:hover { background: #b5732f; transform: translateY(-2px); }
+    .hero-visual { display: flex; gap: 1rem; justify-content: center; align-items: flex-end; }
+    .book-spine {
+      border-radius: 4px 2px 2px 4px; display: flex; align-items: center; justify-content: center;
+      writing-mode: vertical-rl; font-family: 'Playfair Display', serif; font-size: 0.7rem;
+      font-weight: 700; letter-spacing: 0.1em; color: rgba(255,255,255,0.8); padding: 1rem 0.5rem;
+      box-shadow: 3px 4px 12px rgba(0,0,0,0.18); transition: transform 0.2s;
+    }
+    .book-spine:hover { transform: translateY(-8px); }
+    .bs1{width:52px;height:180px;background:#3d5a80}
+    .bs2{width:48px;height:210px;background:#c8873a}
+    .bs3{width:55px;height:160px;background:#6b4226}
+    .bs4{width:44px;height:195px;background:#4a7c59}
+    .bs5{width:50px;height:172px;background:#8b2252}
+
+    .books-section { max-width: 1200px; margin: 0 auto; padding: 3rem 5%; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 0.4rem; }
+    .section-sub { color: var(--muted); font-size: 0.88rem; margin-bottom: 2rem; }
+
+    .search-wrap { max-width: 460px; margin: 0 auto 2.5rem; position: relative; }
+    .search-wrap input {
+      width: 100%; padding: 0.8rem 1.4rem; border: 1px solid var(--border); border-radius: 50px;
+      background: var(--card); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.2s;
+    }
+    .search-wrap input:focus { border-color: var(--warm); }
+    .search-wrap button {
+      position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+      background: var(--warm); color: #fff; border: none; padding: 0.5rem 1.2rem;
+      border-radius: 50px; cursor: pointer; font-size: 0.82rem; font-family: 'DM Sans', sans-serif;
+    }
+
+    .filter-bar { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .filter-btn {
+      background: transparent; border: 1px solid var(--border); padding: 0.45rem 1.1rem;
+      border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+      cursor: pointer; color: var(--muted); transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+    .book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
+    .book-card {
+      background: var(--card); border-radius: 10px; overflow: hidden;
+      border: 1px solid var(--border); transition: box-shadow 0.25s, transform 0.2s; cursor: pointer;
+    }
+    .book-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.1); transform: translateY(-4px); }
+    .book-cover {
+      height: 200px; display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700;
+      color: rgba(255,255,255,0.9); text-align: center; padding: 1rem; line-height: 1.3;
+    }
+    .book-info { padding: 1rem; }
+    .book-title { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.25rem; line-height: 1.3; }
+    .book-author { color: var(--muted); font-size: 0.78rem; margin-bottom: 0.6rem; }
+    .book-meta { display: flex; justify-content: space-between; align-items: center; }
+    .book-price { font-weight: 500; color: var(--warm); font-size: 0.95rem; }
+    .book-genre { font-size: 0.7rem; background: var(--warm-lt); color: var(--warm); padding: 0.2rem 0.6rem; border-radius: 50px; font-weight: 500; }
+    .add-btn {
+      width: 100%; margin-top: 0.8rem; background: var(--ink); color: #fff; border: none;
+      padding: 0.6rem; border-radius: 6px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem; cursor: pointer; transition: background 0.2s;
+    }
+    .add-btn:hover { background: var(--warm); }
+
+    .toast {
+      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--ink); color: #fff; padding: 0.8rem 1.6rem; border-radius: 50px;
+      font-size: 0.88rem; opacity: 0; transition: all 0.35s ease; z-index: 200; white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    footer { text-align: center; padding: 2.5rem; color: var(--muted); font-size: 0.82rem; border-top: 1px solid var(--border); margin-top: 4rem; }
+
+    @media (max-width: 680px) { .hero { grid-template-columns: 1fr; } .hero-visual { display: none; } .nav-links { display: none; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Fo<span>lio</span></div>
+  <div class="nav-links">
+    <a href="#" onclick="trackNav('Home')">Home</a>
+    <a href="#books" onclick="trackNav('Books')">Books</a>
+    <a href="#" onclick="trackNav('About')">About</a>
+  </div>
+  <button class="cart-btn" onclick="trackCartView()">🛒 Cart (<span id="cart-count">0</span>)</button>
+</nav>
+
+<section class="hero">
+  <div class="hero-text">
+    <h1>Stories that <em>move</em> the world.</h1>
+    <p>Curated books across fiction, science, history, and more — delivered to your door or your device.</p>
+    <button class="hero-cta" onclick="scrollToBooks()">Browse Collection</button>
+  </div>
+  <div class="hero-visual">
+    <div class="book-spine bs1">OCEAN</div>
+    <div class="book-spine bs2">EMBER</div>
+    <div class="book-spine bs3">EARTH</div>
+    <div class="book-spine bs4">GROVE</div>
+    <div class="book-spine bs5">DUSK</div>
+  </div>
+</section>
+
+<section class="books-section" id="books">
+  <h2 class="section-title">Our Collection</h2>
+  <p class="section-sub">Handpicked reads for every curiosity</p>
+
+  <div class="search-wrap">
+    <input type="text" id="search-input" placeholder="Search by title or author…" oninput="filterBooks()"/>
+    <button onclick="triggerSearch()">Search</button>
+  </div>
+
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="setFilter('All',this)">All</button>
+    <button class="filter-btn" onclick="setFilter('Fiction',this)">Fiction</button>
+    <button class="filter-btn" onclick="setFilter('Non-fiction',this)">Non-fiction</button>
+    <button class="filter-btn" onclick="setFilter('Science',this)">Science</button>
+    <button class="filter-btn" onclick="setFilter('History',this)">History</button>
+  </div>
+
+  <div class="book-grid" id="book-grid"></div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<footer>© 2025 Folio Book Store · All rights reserved</footer>
+
+<script>
+  const books = [
+    { title:"The Midnight Library", author:"Matt Haig",           price:14.99, genre:"Fiction",     color:"#3d5a80" },
+    { title:"Sapiens",              author:"Yuval N. Harari",     price:16.49, genre:"History",     color:"#6b4226" },
+    { title:"A Brief History of Time", author:"Stephen Hawking", price:12.99, genre:"Science",     color:"#2c4a3e" },
+    { title:"Atomic Habits",        author:"James Clear",         price:15.99, genre:"Non-fiction", color:"#c8873a" },
+    { title:"Dune",                 author:"Frank Herbert",       price:13.49, genre:"Fiction",     color:"#8b2252" },
+    { title:"Thinking, Fast & Slow",author:"Daniel Kahneman",    price:14.29, genre:"Non-fiction", color:"#4a3f35" },
+    { title:"The Gene",             author:"Siddhartha Mukherjee",price:17.99, genre:"Science",     color:"#1d4e6b" },
+    { title:"Educated",             author:"Tara Westover",       price:13.79, genre:"History",     color:"#5c4033" },
+  ];
+
+  let cartCount = 0;
+  let activeFilter = "All";
+
+  function renderBooks() {
+    const q = document.getElementById("search-input").value.toLowerCase();
+    const grid = document.getElementById("book-grid");
+    grid.innerHTML = "";
+    const filtered = books.filter(b =>
+      (activeFilter === "All" || b.genre === activeFilter) &&
+      (b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q))
+    );
+    if (!filtered.length) {
+      grid.innerHTML = `<p style="color:var(--muted);grid-column:1/-1;text-align:center;padding:2rem">No books found.</p>`;
+      return;
+    }
+    filtered.forEach(book => {
+      const card = document.createElement("div");
+      card.className = "book-card";
+      card.innerHTML = `
+        <div class="book-cover" style="background:${book.color}">${book.title}</div>
+        <div class="book-info">
+          <div class="book-title">${book.title}</div>
+          <div class="book-author">${book.author}</div>
+          <div class="book-meta">
+            <span class="book-price">$${book.price.toFixed(2)}</span>
+            <span class="book-genre">${book.genre}</span>
+          </div>
+          <button class="add-btn" onclick="addToCart('${book.title}','${book.genre}',${book.price})">Add to Cart</button>
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  function setFilter(genre, el) {
+    activeFilter = genre;
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    el.classList.add("active");
+    renderBooks();
+    gtag('event','filter_click',{ event_category:'engagement', event_label:genre, filter_genre:genre });
+  }
+
+  function filterBooks() { renderBooks(); }
+
+  function triggerSearch() {
+    const q = document.getElementById("search-input").value;
+    renderBooks();
+    if (q.trim()) gtag('event','search',{ event_category:'engagement', search_term:q });
+  }
+
+  function addToCart(title, genre, price) {
+    cartCount++;
+    document.getElementById("cart-count").textContent = cartCount;
+    showToast(`"${title}" added to cart 🎉`);
+    gtag('event','add_to_cart',{ event_category:'ecommerce', event_label:title, item_name:title, item_category:genre, value:price, currency:'USD' });
+  }
+
+  function trackCartView() {
+    showToast(`Cart has ${cartCount} item(s)`);
+    gtag('event','view_cart',{ event_category:'ecommerce', event_label:'cart_icon', cart_count:cartCount });
+  }
+
+  function trackNav(page) {
+    gtag('event','nav_click',{ event_category:'navigation', event_label:page });
+  }
+
+  function scrollToBooks() {
+    document.getElementById("books").scrollIntoView({ behavior:"smooth" });
+    gtag('event','hero_cta_click',{ event_category:'engagement', event_label:'Browse Collection' });
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2500);
+  }
+
+  renderBooks();
+  gtag('event','page_view',{ page_title:'Folio Bookstore', page_location:window.location.href });
+</script>
+</body>
+</html>
